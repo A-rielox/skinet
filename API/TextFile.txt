@@ -2,3 +2,11 @@
 
 update-database
 
+add-migration InitialCreate2 -o Data/Migrations
+
+
+
+drop-database -p Infrastructure -s API
+remove-migration -p Infrastructure -s API
+
+add-migration InitialCreate -p Infrastructure -s API -o Data/Migrations
