@@ -18,7 +18,7 @@ namespace Infrastructure.Data.Config
             
             builder.Property(p => p.PictureUrl).IsRequired();
 
-            // HasOne => 1 Product tiene 1 ProductBrand, WithMany() xq q brand esta asociada a many Products
+         // HasOne => 1 Product tiene 1 ProductBrand, WithMany() una brand esta asociada a many Products
             builder.HasOne(p => p.ProductBrand).WithMany()
                 .HasForeignKey(p => p.ProductBrandId); 
 
