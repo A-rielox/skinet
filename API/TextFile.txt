@@ -10,3 +10,6 @@ drop-database -p Infrastructure -s API
 remove-migration -p Infrastructure -s API
 
 add-migration InitialCreate -p Infrastructure -s API -o Data/Migrations
+-p Infrastructure	---> donde esta el context
+-s API				---> el starter project
+-o Data/Migrations	---> donde guarda la migracion
