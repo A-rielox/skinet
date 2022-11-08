@@ -68,6 +68,14 @@ namespace Infrastructure.Data
         {
             return await ApplySpecification(spec).ToListAsync();
         }
+        ////////////////////////////////////////
+        ///////////////////////////////////////////
+        ///
+        // para solo contar cantidad de elementos YA filtrados
+        public async Task<int> CountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
+        }
 
         ////////////////////////////////////////
         ///////////////////////////////////////////

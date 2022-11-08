@@ -7,8 +7,11 @@ namespace Core.Specifications
     {
         // con || si la expresion es false => hace lo d la derecha
         // si viene alguno => lo pasa al base y ocupa el constructor q pone el Criteria
+        // Search se checa con IsNullOrEmpty xq es string, los ...Id son int?
         public ProductsWithTypesAndBrandsSpecification(ProductSpecParams productParams)
             : base( x =>
+                (string.IsNullOrEmpty(productParams.Search) || x.Name
+                                                    .ToLower().Contains(productParams.Search)) &&
                 (!productParams.BrandId.HasValue || x.ProductBrandId == productParams.BrandId) &&
                 (!productParams.TypeId.HasValue || x.ProductTypeId == productParams.TypeId)
             )

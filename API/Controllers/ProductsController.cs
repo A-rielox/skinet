@@ -1,5 +1,6 @@
 ﻿using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -34,13 +35,20 @@ namespace API.Controllers
             [FromQuery]ProductSpecParams productParams)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(productParams);
-            var products = await _productsRepo.ListAsync(spec);
-            var productsToReturn = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
+            var countSpec = new ProductsWithFiltersForCountSpecification(productParams);
 
-            return Ok(productsToReturn);
+            var totalItems = await _productsRepo.CountAsync(countSpec);
+            var products = await _productsRepo.ListAsync(spec);
+
+            var data = _mapper.Map<IReadOnlyList<ProductToReturnDto>>(products);
+
+            var returnInfo = new Pagination<ProductToReturnDto>(productParams.PageIndex,
+                                                                productParams.PageSize, totalItems, data);
+
+            return Ok(returnInfo);
 
             // p' ocupar Mapper pongo la config en MappingProfiles y lo agrego a Startup
-
+            
             // p'verlo ocupo:
             // BaseSpecification, SpecificationEvaluator, GenericRepository, ProductsWithTypesAndBrandsSpecification
         }

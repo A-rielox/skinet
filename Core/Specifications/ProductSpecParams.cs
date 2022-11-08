@@ -12,15 +12,16 @@
             set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
         }
 
-        public int? BrandId { get; set; }
-        public int? TypeId { get; set; }
+        public int? BrandId { get; set; } // p' Criteria
+        public int? TypeId { get; set; } // p' Criteria
         public string Sort { get; set; }
 
-        //private string _search;
-        //public string Search
-        //{
-        //    get => _search;
-        //    set => _search = value.ToLower();
-        //}
+
+        private string _search; // backing field.
+        public string Search // p' Criteria
+        {
+            get => _search;
+            set => _search = value.ToLower();
+        }
     }
 }
