@@ -47,6 +47,9 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
             }
 
+            // para redireccionar los errores con mi controller de errores, p' el caso en que no existe la ruta
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

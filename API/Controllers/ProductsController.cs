@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IGenericRepository<ProductBrand> _productBrandRepo;
@@ -64,7 +62,7 @@ namespace API.Controllers
         ////////////////////////////////////////
         ///////////////////////////////////////////
         ///
-        [HttpGet("brands")]
+        [HttpGet("brands")] // api/Products/brands
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
         {
             var brands = await _productBrandRepo.ListAllAsync();
@@ -75,7 +73,7 @@ namespace API.Controllers
         ////////////////////////////////////////
         ///////////////////////////////////////////
         ///
-        [HttpGet("types")]
+        [HttpGet("types")] // api/Products/types
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
         {
             var types = await _productTypeRepo.ListAllAsync();
