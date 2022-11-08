@@ -1,7 +1,7 @@
 ﻿using API.Dtos;
 using AutoMapper;
 using Core.Entities;
-
+// p' el mapeo de Mapper ( en MappingProfiles )
 namespace API.Helpers
 {
     // string es el tipo de lo que devuelve ( el PictureUrl )
