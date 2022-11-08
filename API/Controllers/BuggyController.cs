@@ -58,6 +58,8 @@ namespace API.Controllers
         ////////////////////////////////////////
         ///////////////////////////////////////////
         /// GET: api/buggy/badrequest/{id}
+        
+        // este es el q salta cuando hay errores de validacion en forms
         [HttpGet("BadRequest/{id}")]
         public ActionResult GetBadRequest(int id)
         {

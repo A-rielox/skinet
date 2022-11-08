@@ -1,12 +1,10 @@
 ﻿using API.Errors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.RegularExpressions;
 
 namespace API.Controllers
 {
     [Route("errors/{code}")]
-    //[ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController : BaseApiController
     {
         public IActionResult Error(int code)
@@ -17,8 +15,13 @@ namespace API.Controllers
 }
 
 // [ApiExplorerSettings(IgnoreApi = true)] xq no me deja entrar swagger
-//Fetch error
-//response status is 500 /swagger/v1/swagger.json
+// Fetch error
+// response status is 500 /swagger/v1/swagger.json
+
+// en el Startup.cs
+// para redireccionar los errores con mi controller de errores, p' el caso en que no existe la ruta
+// app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
 
 /// An ActionResult that on execution will write an object to the response
 /// using mechanisms provided by the host.
