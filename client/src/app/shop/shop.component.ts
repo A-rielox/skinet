@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IBrand } from '../shared/models/brand';
 import { IProduct } from '../shared/models/product';
 import { IType } from '../shared/models/productType';
+import { ShopParams } from '../shared/models/shopParams';
 import { ShopService } from './shop.service';
 
 @Component({
@@ -10,11 +11,20 @@ import { ShopService } from './shop.service';
    styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
+   // como el input siempre va a estar ( no esta envuelto en un *ngIf que condiciona si esta o no ) se le puede poner { static: true }
+   @ViewChild('search', { static: true }) searchTerm: ElementRef;
+
    products: IProduct[];
    brands: IBrand[];
    types: IType[];
-   brandIdSelected: number = 0;
-   typeIdSelected: number = 0;
+   totalCount: number;
+   shopParams = new ShopParams();
+
+   sortOptions = [
+      { name: 'Alphabetical', value: 'name' },
+      { name: 'Price: Low to High', value: 'priceAsc' },
+      { name: 'Price: High to Low', value: 'priceDesc' },
+   ];
 
    constructor(private shopService: ShopService) {}
 
@@ -25,12 +35,15 @@ export class ShopComponent implements OnInit {
    }
 
    getProducts() {
-      this.shopService
-         .getProducts(this.brandIdSelected, this.typeIdSelected)
-         .subscribe({
-            next: (res) => (this.products = res.data),
-            error: (error) => console.log(error),
-         });
+      this.shopService.getProducts(this.shopParams).subscribe({
+         next: (res) => {
+            this.products = res.data;
+            this.shopParams.pageNumber = res.pageIndex;
+            this.shopParams.pageSize = res.pageSize;
+            this.totalCount = res.count;
+         },
+         error: (error) => console.log(error),
+      });
    }
 
    getBrands() {
@@ -48,18 +61,40 @@ export class ShopComponent implements OnInit {
    }
 
    onBrandSelected(brandId: number) {
-      this.brandIdSelected = brandId;
+      this.shopParams.brandId = brandId;
+      this.shopParams.pageNumber = 1;
       this.getProducts();
    }
 
    onTypeSelected(typeId: number) {
-      this.typeIdSelected = typeId;
+      this.shopParams.typeId = typeId;
+      this.shopParams.pageNumber = 1;
       this.getProducts();
    }
 
-   onSortSelected(e: any) {}
+   onSortSelected(sort: string) {
+      this.shopParams.sort = sort;
+      this.shopParams.pageNumber = 1;
+      this.getProducts();
+   }
 
-   onSearch() {}
+   onPageChanged(e: number) {
+      if (this.shopParams.pageNumber !== e) {
+         // xq al cambiar totalCount el pager llama el pageChanged q va a terminar llamando otra vez a este, q a su vez llama a getProducts() . Como lo llama con el mismo pageNumber => asi discrimino
+         this.shopParams.pageNumber = e;
+         this.getProducts();
+      }
+   }
 
-   onReset() {}
+   onSearch() {
+      this.shopParams.search = this.searchTerm.nativeElement.value;
+      this.shopParams.pageNumber = 1;
+      this.getProducts();
+   }
+
+   onReset() {
+      this.searchTerm.nativeElement.value = '';
+      this.shopParams = new ShopParams();
+      this.getProducts();
+   }
 }
