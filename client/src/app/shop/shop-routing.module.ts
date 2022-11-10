@@ -4,9 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { ShopComponent } from './shop.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 
+// { alias: 'productDetails' } en el product-details le doy el alias p' lo que va a desplegar en el breadcrumb
 const routes: Routes = [
    { path: '', component: ShopComponent },
-   { path: ':id', component: ProductDetailsComponent },
+   {
+      path: ':id',
+      component: ProductDetailsComponent,
+      data: { breadcrumb: { alias: 'productDetails' } },
+   },
 ];
 
 @NgModule({

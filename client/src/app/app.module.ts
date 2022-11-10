@@ -9,6 +9,9 @@ import { CoreModule } from './core/core.module';
 import { HomeModule } from './home/home.module';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
+
 @NgModule({
    declarations: [AppComponent],
    imports: [
@@ -19,9 +22,11 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
       CoreModule,
       // ShopModule, x lazy-loading
       HomeModule,
+      NgxSpinnerModule,
    ],
    providers: [
       { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+      { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
    ],
    bootstrap: [AppComponent],
 })
