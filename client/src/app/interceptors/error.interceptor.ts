@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
@@ -49,7 +49,14 @@ export class ErrorInterceptor implements HttpInterceptor {
                }
 
                if (error.status === 500) {
-                  this.router.navigateByUrl('/server-error');
+                  // yellow 🟡
+                  // p' poder pasar un state a la ruta a la q se va a navegar
+                  // NavigationExtras SOLO se pueden "sacar" en el constructor ( en este caso en el de ServerErrorComponent )
+                  // error.error tiene el error ( object ) que yo mando del back
+                  const navigationExtras: NavigationExtras = {
+                     state: { error: error.error },
+                  };
+                  this.router.navigateByUrl('/server-error', navigationExtras);
                }
             }
 
