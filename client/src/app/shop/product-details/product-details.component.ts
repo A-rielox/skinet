@@ -22,6 +22,9 @@ export class ProductDetailsComponent implements OnInit {
       // this.activatedRoute.params.subscribe((res) => {
       //    this.productId = +res.id;
       // }); 📌
+
+      // p'q al cargar la pag salga este nombre de item xdefecto en el header
+      this.bcService.set('@productDetails', '... Cargando Producto');
    }
 
    ngOnInit(): void {

@@ -12,7 +12,8 @@ import { ShopService } from './shop.service';
 })
 export class ShopComponent implements OnInit {
    // como el input siempre va a estar ( no esta envuelto en un *ngIf que condiciona si esta o no ) se le puede poner { static: true }
-   @ViewChild('search', { static: true }) searchTerm: ElementRef;
+   // como lo cambie dentro de un *ngIf => ahora es false
+   @ViewChild('search', { static: false }) searchTerm: ElementRef;
 
    products: IProduct[];
    brands: IBrand[];

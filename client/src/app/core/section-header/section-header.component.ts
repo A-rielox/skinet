@@ -8,7 +8,6 @@ import { BreadcrumbService } from 'xng-breadcrumb';
    styleUrls: ['./section-header.component.scss'],
 })
 export class SectionHeaderComponent implements OnInit {
-   breadcrumbs: any;
    breadcrumb$: Observable<any[]>;
 
    constructor(private bcService: BreadcrumbService) {}
