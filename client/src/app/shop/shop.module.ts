@@ -9,6 +9,6 @@ import { ShopRoutingModule } from './shop-routing.module';
 @NgModule({
    declarations: [ShopComponent, ProductItemComponent, ProductDetailsComponent],
    imports: [CommonModule, SharedModule, /* RouterModule */ ShopRoutingModule],
-   // exports: [ShopComponent], x lazy-loading
+   // exports: [ShopComponent], xq viene en ShopRoutingModule
 })
 export class ShopModule {}
