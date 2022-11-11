@@ -12,4 +12,30 @@ remove-migration -p Infrastructure -s API
 add-migration InitialCreate -p Infrastructure -s API -o Data/Migrations
 -p Infrastructure	---> donde esta el context
 -s API				---> el starter project
--o Data/Migrations	---> donde guarda la migracion
+-o Data/Migrations	---> donde guarda la migracion, las sigs migraciones no se necesita especificar
+
+
+cuando ya tengo Identity
+add-migration IdentiytInitial -p Infrastructure -s API -c AppIdentityDbContext -o Identity/Migrations
+
+-c					---> el context
+
+
+
+
+el UserManager o SigninManager se usan en lugar del context para interactuar con la db de Identity
+
+
+seed user
+
+{
+  "email": "bob@test.com",
+  "password": "P@ssword1"
+}
+
+
+{
+  "displayName": "tom",
+  "email": "tom@test.com",
+  "password": "P@ssword1"
+}

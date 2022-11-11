@@ -2,6 +2,7 @@ using API.Extensions;
 using API.Helpers;
 using API.Middleware;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -27,6 +28,10 @@ namespace API
             {
                 options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
             });
+            services.AddDbContext<AppIdentityDbContext>(options =>
+            {
+                options.UseSqlite(_config.GetConnectionString("IdentityConnection"));
+            });
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -35,7 +40,7 @@ namespace API
             });
 
             services.AddApplicationServices(); // p' lo de mi metodo de extension
-
+            services.AddIdentityServices(_config);
             services.AddSwaggerDocumentation();
 
             services.AddCors(opt =>
@@ -72,6 +77,7 @@ namespace API
 
             app.UseCors("CorsPolicy");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseSwaggerDocumentation();  // p' lo de mi metodo de extension
