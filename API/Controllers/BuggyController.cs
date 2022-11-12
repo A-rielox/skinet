@@ -1,5 +1,6 @@
 ﻿using API.Errors;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,16 @@ namespace API.Controllers
             _context = context;
         }
 
+        ////////////////////////////////////////
+        ///////////////////////////////////////////
+        /// GET: api/buggy/TestAuth
+        [HttpGet("TestAuth")]
+        [Authorize]
+        public ActionResult<string> GetSecretText()
+        {
+            return "Secret stuff";
+        }
+        
         ////////////////////////////////////////
         ///////////////////////////////////////////
         /// GET: api/buggy/notfound
