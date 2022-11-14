@@ -30,7 +30,20 @@
             {{ basket.items.length }}
          </div>
       </a>
-      <a class="btn btn-outline-secondary mr-2" href="#">Login</a>
-      <a class="btn btn-outline-secondary mr-3" href="#">Sign up</a>
+
+      <ng-container *ngIf="(currentUser$ | async) === null">
+         <a class="btn btn-outline-secondary mr-2" routerLink="/account/login"
+            >Login</a
+         >
+         <a
+            class="btn btn-outline-secondary mr-3"
+            routerLink="/account/register"
+            >Sign up</a
+         >
+      </ng-container>
+
+      <ng-container *ngIf="currentUser$ | async as currentUser">
+         <a href="#">Welcome {{ currentUser.displayName }}</a>
+      </ng-container>
    </div>
 </header>

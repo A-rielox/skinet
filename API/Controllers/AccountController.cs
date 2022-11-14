@@ -32,6 +32,7 @@ namespace API.Controllers
         ////////////////////////////////////////
         ///////////////////////////////////////////
         /// GET: api/account
+        // es un get req que solo tiene el token en el header
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
