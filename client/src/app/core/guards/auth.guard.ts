@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
       next: ActivatedRouteSnapshot,
       state: RouterStateSnapshot
    ): Observable<boolean> {
-      // cuando estoy dentro del router (como en esta guard) no necesito hacer ni subscribe ni unsubscribe, lo hace el router
+      // 🟡 cuando estoy dentro del router (como en esta guard) no necesito hacer ni subscribe ni unsubscribe, lo hace el router
 
       return this.accountService.currentUser$.pipe(
          map((auth) => {

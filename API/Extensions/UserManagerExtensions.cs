@@ -11,7 +11,7 @@ namespace API.Extensions
             this UserManager<AppUser> input, ClaimsPrincipal user)
         {
             // mejor q el de abajo
-            //var email = User.FindFirstValue(ClaimTypes.Email);
+            //var email = user.FindFirstValue(ClaimTypes.Email);
             var email = user?.Claims?.FirstOrDefault( x => x.Type == ClaimTypes.Email )?.Value;
 
             return await input.Users.Include(u => u.Address).SingleOrDefaultAsync(u => u.Email == email);

@@ -26,6 +26,10 @@ add-migration IdentiytInitial -p Infrastructure -s API -c AppIdentityDbContext -
 el UserManager o SigninManager se usan en lugar del context para interactuar con la db de Identity
 
 
+
+add-migration OrderEntityAdded -p Infrastructure -s API -c StoreContext
+
+
 seed user
 
 {

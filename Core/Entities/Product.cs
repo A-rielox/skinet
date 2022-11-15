@@ -16,4 +16,4 @@
 }
 
 // la configuracion especifica la hago en " ProductConfiguration ", en lugar
-// de la q me da la migracion por defecto
+// de la q me da la migracion por defecto   
