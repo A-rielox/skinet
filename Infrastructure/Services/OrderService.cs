@@ -1,24 +1,30 @@
 ﻿using Core.Entities;
 using Core.Entities.OrderAggregate;
 using Core.Interfaces;
+using Core.Specifications;
 using Infrastructure.Data;
 
 namespace Infrastructure.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IGenericRepository<Order> _orderRepo;
+
+        /*private readonly IGenericRepository<Order> _orderRepo;
         private readonly IGenericRepository<DeliveryMethod> _dmRepo;
-        private readonly IGenericRepository<Product> _productRepo;
+        private readonly IGenericRepository<Product> _productRepo;*/
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IBasketRepository _basketRepo;
 
-        public OrderService(IGenericRepository<Order> orderRepo,
-            IGenericRepository<DeliveryMethod> dmRepo, IGenericRepository<Product> productRepo,
-            IBasketRepository basketRepo)
+        public OrderService(/*IGenericRepository<Order> orderRepo,
+                            IGenericRepository<DeliveryMethod> dmRepo,
+                            IGenericRepository<Product> productRepo,*/
+                            IUnitOfWork unitOfWork,
+                            IBasketRepository basketRepo)
         {
-            _orderRepo = orderRepo;
+            /*_orderRepo = orderRepo;
             _dmRepo = dmRepo;
-            _productRepo = productRepo;
+            _productRepo = productRepo;*/
+            _unitOfWork = unitOfWork;
             _basketRepo = basketRepo;
         }
 
@@ -35,10 +41,12 @@ namespace Infrastructure.Services
             // customerBasket tiene una lista de items
             var items = new List<OrderItem>();
 
+            // si NO existe la basket => me da exception en el foreach ( ya q es null y quiero acceder a
+            // .Items )
             foreach (var item in basket.Items)
             {
-                var productItem = await _productRepo.GetByIdAsync(item.Id);
-                var itemOrdered = new ProductItemOrdered(productItem.Id,productItem.Name,
+                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
+                var itemOrdered = new ProductItemOrdered(productItem.Id, productItem.Name,
                     productItem.PictureUrl);
                 var orderItem = new OrderItem(itemOrdered, productItem.Price, item.Quantity);
 
@@ -46,7 +54,7 @@ namespace Infrastructure.Services
             }
 
             // ----- get delivery method from repo
-            var delieveryMethod = await _dmRepo.GetByIdAsync(delieveryMethodId);
+            var delieveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(delieveryMethodId);
 
             // ----- calc subtotal
             var subtotal = items.Sum(i => i.Quantity * i.Price);
@@ -54,7 +62,15 @@ namespace Infrastructure.Services
             // ----- create order
             var order = new Order(items, buyerEmail, shippingAddress, delieveryMethod, subtotal);
 
-            // ----- save to db             TODO
+            // ----- save to db
+            _unitOfWork.Repository<Order>().Add(order);
+
+            var result = await _unitOfWork.Complete();
+
+            if(result <= 0) return null;
+
+            // ----- si se guarda la order => borro la basket
+            await _basketRepo.DeleteBasketAsync(basketId);
 
             // ----- return order
             return order;
@@ -63,25 +79,29 @@ namespace Infrastructure.Services
         ////////////////////////////////////////////
         ////////////////////////////////////////////
         //
-        public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        public async Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Repository<DeliveryMethod>().ListAllAsync();
         }
 
         ////////////////////////////////////////////
         ////////////////////////////////////////////
         //
-        public Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
+        public async Task<Order> GetOrderByIdAsync(int id, string buyerEmail)
         {
-            throw new NotImplementedException();
+            var spec = new OrdersWithItemsAndOrderingSpecification(id, buyerEmail);
+
+            return await _unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
         }
 
         ////////////////////////////////////////////
         ////////////////////////////////////////////
         //
-        public Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
+        public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var spec = new OrdersWithItemsAndOrderingSpecification(buyerEmail);
+
+            return await _unitOfWork.Repository<Order>().ListAsync(spec);
         }
     }
 }

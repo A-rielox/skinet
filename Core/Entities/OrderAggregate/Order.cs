@@ -31,3 +31,5 @@
         }
     }
 }
+// la " ShipToAddress " es owned por la Order => no se necesita hacer el include p' obtenerla
+// si se necesita include() para el DeliveryMethod y OrderItems

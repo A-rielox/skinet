@@ -15,5 +15,10 @@ namespace Core.Interfaces
 
         // para solo contar cantidad de elementos YA filtrados
         Task<int> CountAsync(ISpecification<T> spec);
+
+        // solo p'q entityF trackee las entities, la UnitOfWork es la q va a salvar los cambios
+        void Add(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }
