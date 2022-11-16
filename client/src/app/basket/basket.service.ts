@@ -9,6 +9,7 @@ import {
    IBasketItem,
    IBasketTotals,
 } from '../shared/models/basket';
+import { IDeliveryMethod } from '../shared/models/deliveryMethod';
 import { IProduct } from '../shared/models/product';
 
 @Injectable({
@@ -21,8 +22,14 @@ export class BasketService {
    basket$ = this.basketSource.asObservable();
    private basketTotalSource = new BehaviorSubject<IBasketTotals>(null);
    basketTotals$ = this.basketTotalSource.asObservable();
+   shipping: number = 0;
 
    constructor(private http: HttpClient) {}
+
+   setShippingPrice(deliveryMethod: IDeliveryMethod) {
+      this.shipping = deliveryMethod.price;
+      this.calculateTotals();
+   }
 
    // los componentes agarran el basket del observable basket$, los metodos hacen el request y lo meten ahi
    // voy a ocupar el async pipe " | " para hacer la suscripcion y traer el valor
@@ -112,7 +119,7 @@ export class BasketService {
    ///////////////////////
    private calculateTotals() {
       const basket = this.getCurrentBasketValue();
-      const shipping = 0;
+      const shipping = this.shipping;
       const subtotal = basket.items.reduce((acc, curr) => {
          acc = curr.price * curr.quantity + acc;
 
