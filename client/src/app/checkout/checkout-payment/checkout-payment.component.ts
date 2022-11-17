@@ -36,7 +36,6 @@ export class CheckoutPaymentComponent implements OnInit {
             // yellow navigationExtras los saco SOLO en el constructor del componente donde lo mando, en este caso checkout-success-comp
             const navigationExtras: NavigationExtras = { state: order };
             this.router.navigate(['checkout/success'], navigationExtras);
-            console.log(order);
          },
          (error) => {
             console.log(error);
